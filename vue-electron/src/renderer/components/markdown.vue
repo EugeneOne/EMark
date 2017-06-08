@@ -1,6 +1,6 @@
 <template>
     <div id="markdown">
-        <head-nav></head-nav>
+        <router-link to="/">/</router-link>
         <div class="markdownOut">
             <mark-nav></mark-nav>
             <input-page class="f-l" :width="width"></input-page>
@@ -9,13 +9,11 @@
     </div>
 </template>
 <script>
-import headNav from "./models/head-nav"
 import markNav from "./models/markNav.vue"
 import inputPage from "./models/inputPage.vue"
 import outputPage from "./models/outputPage.vue"
 export default {
     components: {
-        headNav,
         markNav,
         inputPage,
         outputPage
@@ -30,7 +28,6 @@ export default {
 <style lang="scss">
 #markdown {
     .markdownOut {
-        width: 1200px;
         margin: 0 auto;
         min-height: 800px;
         textarea {

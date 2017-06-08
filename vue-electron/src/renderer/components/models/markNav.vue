@@ -90,17 +90,18 @@ export default {
         editor(value) {
             let that = this;
             let inputArea = document.getElementById("inputArea");
+            inputArea.focus();
+
             let startPoint = inputArea.selectionStart;
             let endPoint = inputArea.selectionEnd;
             let oldValue = inputArea.value;
 
             let newValue = "";
 
-            inputArea.focus();
-
-            console.log(startPoint, startPoint)
+            console.log(startPoint, endPoint)
 
             if (startPoint == endPoint) {
+                console.log("startPoint == endPoint")
                 switch (value) {
                     case '**加粗内容**':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 2, 2);
@@ -146,18 +147,6 @@ export default {
                     case '```\r\n请输入代码\n```':
                         aCharts = "`";
                         bCharts = "`";
-                        break;
-                    case '![Img](图片地址)':
-                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 7, 1);
-                        break;
-                    case '\n 1. 列表项目':
-                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 5, 0);
-                        break;
-                    case '\n - 列表项目':
-                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 4, 0);
-                        break;
-                    case '## 标题文字 ##':
-                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 3, 3);
                         break;
                     default:
                         return false

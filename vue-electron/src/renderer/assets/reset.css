@@ -17,9 +17,6 @@ a{
 	text-decoration: none;
 	color:#333;
 }
-em{
-	font-style: normal;
-}
 #app{
 	background:#fff;
 }
@@ -29,3 +26,10 @@ em{
 .f-r{
     float: right;
 }
+.icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
