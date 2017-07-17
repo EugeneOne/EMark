@@ -67,10 +67,10 @@
             </li>
             </li>
     
-            <li class="f-r editorBtn" @click="editorModel(' left ')" title="编辑模式">编辑模式</li>
-            <li class="f-r editorBtn" @click="editorModel(' right ')" title="实况模式">实况模式</li>
-            <li class="f-r editorBtn" @click="editorModel(' right ')" title="预览模式">预览模式</li>
-            <li class="f-r editorBtn" @click="editorModel(' right ')" title="全屏">全屏</li>
+            <li class="f-r editorBtn w66" @click="editorModel(4)" title="编辑模式">编辑</li>
+            <li class="f-r editorBtn w66" @click="editorModel(3)" title="实况模式">实况</li>
+            <li class="f-r editorBtn w66" @click="editorModel(2)" title="预览模式">预览</li>
+            <li class="f-r editorBtn w66" @click="editorModel(1)" title="全屏">全屏</li>
         </ul>
     </div>
 </template>
@@ -83,7 +83,8 @@ export default {
         }
     },
     computed: {
-        txt() {
+        showType() {
+            return this.$store.state.showType
         }
     },
     methods: {
@@ -98,10 +99,7 @@ export default {
 
             let newValue = "";
 
-            console.log(startPoint, endPoint)
-
             if (startPoint == endPoint) {
-                console.log("startPoint == endPoint")
                 switch (value) {
                     case '**加粗内容**':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 2, 2);
@@ -165,14 +163,13 @@ export default {
             return newValue;
         },
         insertTo(elem, start, end, oldValue, chart1, chart2) {
-            console.log(chart1, chart2)
             let newValue = oldValue.substring(0, start) + chart1 + oldValue.substring(start, end) + chart2 + oldValue.substring(end, oldValue.length);
             inputArea.value = newValue;
             inputArea.setSelectionRange(start + chart1.length, end + chart2.length);
             return newValue
         },
-        editorModel() {
-
+        editorModel(value) {
+            this.$store.dispatch('showType', value)
         }
 
     }
@@ -181,6 +178,9 @@ export default {
 <style lang="scss">
 .markNav {
     width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 10;
     .editorManu {
         width: 100%;
         padding: 0 5px;
@@ -208,6 +208,9 @@ export default {
                 background: #fff;
                 color: #333;
             }
+        }
+        .w66{
+            width: 66px;
         }
     }
 }

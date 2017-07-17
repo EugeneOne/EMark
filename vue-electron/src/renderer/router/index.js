@@ -7,11 +7,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage')
-    },
-    {
-      path: '/markdown',
       name: 'markdown',
       component: require('@/components/markdown')
     },

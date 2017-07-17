@@ -1,6 +1,6 @@
 <template>
     <div class="inputPage" :style="{width: width}">
-        <textarea id="inputArea" :value="txt" autofocus @input="sertTxt" @drop.stop.prevent='dragging'></textarea>
+        <textarea @scroll="scroll" id="inputArea" :value="txt" autofocus @input="sertTxt" @drop.stop.prevent='dragging'></textarea>
     </div>
 </template>
 <script>
@@ -13,11 +13,16 @@ export default {
     },
     computed: {
         txt() {
-            console.log(123)
+
+            return this.$store.state.articleList.content
         }
     },
     mounted() {
         let textarea = document.getElementById("inputArea");
+
+        if(localStorage.article) {
+            this.$store.dispatch('sertTxt', localStorage.article)
+        }
         // textarea.addEventListener("dragenter", dragHandle)
         // function dragHandle(event) {
         //     let that = this;
@@ -33,9 +38,15 @@ export default {
         // }
     },
     methods: {
+        scroll(e) {
+            let outPage = document.querySelector(".outerPage");
+            let inputTxt = document.querySelector("#inputArea");
+            console.log(e.target.scrollTop / outPage.scrollHeight * inputTxt.scrollHeight)
+            outPage.scrollTop = e.target.scrollTop / inputTxt.scrollHeight * outPage.scrollHeight;
+        },
         sertTxt(e) {
-            console.log("e", e.target.value == "\n")
-            let value = e.target.value.replace(/\n/g, "<br/>")
+            //.replace(/\n/g, "<br/>")
+            let value = e.target.value
             this.$store.dispatch('sertTxt', value)
         },
         dragging(event) {
@@ -58,6 +69,6 @@ export default {
 </script>
 <style lang="scss">
 .inputPage {
-    height: 800px;
+    box-shadow: 0 10px 10px #eee;
 }
 </style>

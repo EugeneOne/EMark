@@ -10,7 +10,8 @@ const store = new Vuex.Store({
   state: {
       articleList: {
           content: ""
-      }
+      },
+      showType: "3"
   },
   getters,
   mutations,

@@ -1,6 +1,6 @@
 <template>
     <div class="outerPage" :style="{width: width}">
-        <div v-html="outTxt"></div>
+        <div v-html="outTxt" class="outerTxt"></div>
     </div>
 </template>
 <script>
@@ -15,16 +15,19 @@ export default {
         outTxt() {
             return this.$store.getters.toMd
         }
-    }
+    },
 }
 </script>
 <style lang="scss">
 .outerPage {
-    height: 800px;
-    padding: 15px;
     box-sizing: border-box;
     border-bottom: 1px solid #ccc;
-    background: #f5f6f7;
+    background: #f6f7f8;
+    font-size: 14px;
+    overflow: auto;
+    .outerTxt{
+        padding: 15px;
+    }
     table,
     ul,
     p,
@@ -81,11 +84,15 @@ export default {
         padding: 3px 5px;
         } 
     pre {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #eee;
         code {
-        background: #ddd;
+        background: initial;
         width: 100%;
         color: #000;
-        padding: 15px 10px;
+        padding: 0
         }   
     }
 }
