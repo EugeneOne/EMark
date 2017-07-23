@@ -1,45 +1,56 @@
-# electron-quick-start
+**Electron API**
+> ##DOM 
 
-**Clone and run for a quick way to see Electron in action.**
+####File对象
+提供了一个path属性，获取文件真实路径
 
-This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start) within the Electron documentation.
-
-**Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
-
-A basic Electron application needs just these files:
-
-- `package.json` - Points to the app's main file and lists its details and dependencies.
-- `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
-- `index.html` - A web page to render. This is the app's **renderer process**.
-
-You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/tutorial/quick-start).
-
-## To Use
-
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
-
-```bash
-# Clone this repository
-git clone https://github.com/electron/electron-quick-start
-# Go into the repository
-cd electron-quick-start
-# Install dependencies
-npm install
-# Run the app
-npm start
+```
+  var holder = document.getElementById('holder');
+  holder.ondragover = function () {
+    return false;
+  };
+  holder.ondragleave = holder.ondragend = function () {
+    return false;
+  };
+  holder.ondrop = function (e) {
+    e.preventDefault();
+    var file = e.dataTransfer.files[0];
+    console.log('File you dragged here is', file.path);
+    return false;
+  };
 ```
 
-Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+#### `<webview>` 标签
+类似iframe，但又不同,webview和应用运行的是不同的进程,没有渲染进程的权限,应用和webview之间的交互全部是异步的
+```
+	<webview id="foo" src="https://www.github.com/" style="display:inline-block; width:640px; height:480px"></webview>
+```
 
-## Resources for Learning Electron
+有两个事件监听：
 
-- [electron.atom.io/docs](http://electron.atom.io/docs) - all of Electron's documentation
-- [electron.atom.io/community/#boilerplates](http://electron.atom.io/community/#boilerplates) - sample starter apps created by the community
-- [electron/electron-quick-start](https://github.com/electron/electron-quick-start) - a very basic starter Electron app
-- [electron/simple-samples](https://github.com/electron/simple-samples) - small applications with ideas for taking them further
-- [electron/electron-api-demos](https://github.com/electron/electron-api-demos) - an Electron app that teaches you how to use Electron
-- [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
+	did-start-loading
 
-## License
+监听 web page 准备加载
 
-[CC0 1.0 (Public Domain)](LICENSE.md)
+	did-stop-loading
+
+监听 web page 停止加载
+
+
+**<h2>主进程中的模块</h2>**
+> ##app模块
+
+- app模块
+	
+	app模块是为了控制整个应用给的生命周期设计的
+	
+	```
+	const electron = require('electron')
+	const app = electron.app  //控制应用生命周期的模块
+	```
+	
+	事件列表 | 方法列表：
+
+	[详细链接](https://www.w3cschool.cn/electronmanual/electronmanual-electronapp.html)
+	
+	

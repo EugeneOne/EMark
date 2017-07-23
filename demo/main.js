@@ -1,6 +1,22 @@
 const electron = require('electron')
 // Module to control application life.
-const app = electron.app
+const app = electron.app  //控制应用生命周期的模块
+
+//自定义鱼眼菜单
+// const remote = electron.remote
+// const Menu = remote.menu
+// const dockMenu = Menu.buildFromTemplate([
+//   {labelL: 'New Window', click: function() {
+//     console.log('New Window')
+//   }},
+//   {label: 'New Window with Settings', sunMenu: [
+//     {label: 'Basic'},
+//     {label: 'Pro'}
+//   ]}
+// ])
+// app.dock.setMenu(dockMenu)
+
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -38,6 +54,8 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
+app.on('before-quit', function(event) {
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
