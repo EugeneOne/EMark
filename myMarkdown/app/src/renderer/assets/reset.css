@@ -1,0 +1,35 @@
+body,*{
+	margin:0;
+	padding: 0;
+    box-sizing: border-box;
+	font-family: PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,"微软雅黑",\\5FAE\8F6F\96C5\9ED1,STHeitiSC-Light,simsun,\\5B8B\4F53,WenQuanYi Zen Hei,WenQuanYi Micro Hei,'sans-serif';
+}
+*{
+	box-sizing:border-box;
+}
+*,input,select{
+	outline: 0;
+  -webkit-tap-highlight-color: transparent;
+　　-moz-tap-highlight-color:transparent;
+   -webkit-appearance:none;
+}
+a{
+	text-decoration: none;
+	color:#333;
+}
+#app{
+	background:#fff;
+}
+.f-l{
+    float: left;
+}
+.f-r{
+    float: right;
+}
+.icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
