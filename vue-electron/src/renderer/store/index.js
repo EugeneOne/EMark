@@ -11,7 +11,9 @@ const store = new Vuex.Store({
       articleList: {
           content: ""
       },
-      showType: "3"
+      showType: "3",
+      isNeedSave: false,
+      filePath: ""
   },
   getters,
   mutations,

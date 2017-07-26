@@ -53,7 +53,6 @@ app.on('activate', () => {
         createMainWindow()
     }
 })
-
 /**
  * 注册IPC事件
  */

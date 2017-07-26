@@ -1,7 +1,7 @@
 <template>
     <div id="markdown">
         <div class="markdownOut">
-            <mark-nav></mark-nav>
+            <mark-nav @save="dialogAndSave"></mark-nav>
             <section>
                 <input-page :width=inputWidth class="input page" @dialogAndSave="dialogAndSave"></input-page>
                 <output-page :width=outputWidth class="out page"></output-page>
@@ -19,9 +19,15 @@ import outputPage from "./models/outputPage.vue"
 const remote = require('electron').remote
 const Menu = remote.Menu
 const dialog = remote.dialog
+/*提供了集成其他桌面客户端的关联功能*/
+const shell = remote.shell
+const app = remote.app
 const browserWindow = remote.BrowserWindow
 const focusedWindow = browserWindow.getFocusedWindow()
 const path = require('path')
+
+
+
 import fs from 'fs'
 
 export default {
@@ -32,7 +38,6 @@ export default {
     },
     data() {
         return {
-            readPath: "",
             inputWidth: "50%",
             outputWidth: "50%"
         }
@@ -49,7 +54,16 @@ export default {
         }
     },
     mounted() {
+        let self = this;
+        let win = browserWindow.getAllWindows()[0]
+        console.log('win:', win)
+        win.on('close', () => {
+            if (self.isSave) {
+                self.saveAsFile()
+            }
+        })
         this.initMenu();
+        this.openLinkExternal();
     },
     watch: {
         showType() {
@@ -73,6 +87,26 @@ export default {
     },
     methods: {
         changeType() {
+        },
+        openLinkExternal() {
+            document.addEventListener('click', function (e) {
+                if (e.target.tagName.toLowerCase() !== 'a') {
+                    return
+                }
+
+                if (e.target.getAttribute('href') && e.target.getAttribute('href').substring(0, 4) === 'http') {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    var status = focusedWindow.isAlwaysOnTop()  // get status
+                    focusedWindow.setAlwaysOnTop(true)  // on top
+                    shell.openExternal(e.target.href)  // open link
+                    if (!status) {
+                        setTimeout(function () {
+                            focusedWindow.setAlwaysOnTop(false)  // restore
+                        }, 1000)
+                    }
+                }
+            })
         },
         initMenu() {
             let self = this;
@@ -131,6 +165,44 @@ export default {
                     ]
                 },
                 {
+                    label: '编辑',
+                    submenu: [
+                        {
+                            label: 'Undo',
+                            accelerator: 'CmdOrCtrl+Z',
+                            role: 'undo'
+                        },
+                        {
+                            label: 'Redo',
+                            accelerator: 'Shift+CmdOrCtrl+Z',
+                            role: 'redo'
+                        },
+                        {
+                            type: 'separator'
+                        },
+                        {
+                            label: 'Cut',
+                            accelerator: 'CmdOrCtrl+X',
+                            role: 'cut'
+                        },
+                        {
+                            label: 'Copy',
+                            accelerator: 'CmdOrCtrl+C',
+                            role: 'copy'
+                        },
+                        {
+                            label: 'Paste',
+                            accelerator: 'CmdOrCtrl+V',
+                            role: 'paste'
+                        },
+                        {
+                            label: 'Select All',
+                            accelerator: 'CmdOrCtrl+A',
+                            role: 'selectall'
+                        }
+                    ]
+                },
+                {
                     label: '我的信息',
                     submenu: [
                         {
@@ -148,27 +220,29 @@ export default {
         openFile() {
             //弹框
             let self = this;
-            if (self.isSave) {
+            if (self.isSave && !self.filePath) {
                 self.saveAsFile();
-            } else {
-                dialog.showOpenDialog(focusedWindow, {
-                    title: 'Open Dialog',
-                    filters: [{
-                        name: 'Documents', extensions: ['txt', 'md']
-                    }],
-                    properties: ['openFile']
-                }, function (item) {
-                    if (item) {
-                        self.readFile(item[0])
-                    }
-                })
+            } else if (self.isSave) {
+                self.saveFile()
             }
+
+            dialog.showOpenDialog(focusedWindow, {
+                title: 'Open Dialog',
+                filters: [{
+                    name: 'Documents', extensions: ['txt', 'md']
+                }],
+                properties: ['openFile']
+            }, function (item) {
+                if (item) {
+                    self.readFile(item[0])
+                }
+            })
 
         },
         readFile(path) {
             let self = this;
             fs.readFile(path, 'utf8', function (err, content) {
-                self.readPath = path
+                self.$store.dispatch('filePath', path)
                 console.log("content:", content)
                 self.$store.dispatch('sertTxt', content)
                 // openDialog('error', err.toString())
@@ -188,8 +262,8 @@ export default {
         },
         saveFile() {
             let self = this;
-            if (self.readPath) {
-                self.writeFile(self.readPath)
+            if (self.filePath) {
+                self.writeFile(self.filePath)
             } else {
                 self.saveAsFile();
             }
@@ -199,17 +273,25 @@ export default {
             console.log("path:", path)
             fs.writeFileSync(path, self.$store.state.articleList.content, 'utf8')
             self.$store.dispatch('isSave', false)
+            self.$store.dispatch('filePath', path)
         },
         newScreen() {
             console.log(__dirname, '/newScreen')
-            let win = new browserWindow({ width: 800, height: 800 });
+            var webContents = browserWindow.getFocusedWindow().webContents;
+            console.log(webContents.getURL())
+            let win = new browserWindow({ width: 1000, height: 750 });
             win.on('close', function () { win = null })
-            win.loadURL("http://localhost:9080/")
+            win.loadURL(webContents.getURL())
             win.show();
         },
         dialogAndSave() {
             let self = this;
-            self.saveAsFile()
+            if (self.filePath) {
+                self.writeFile(self.filePath)
+            } else {
+                self.saveAsFile();
+            }
+
         }
     }
 }

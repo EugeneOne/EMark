@@ -62,9 +62,10 @@ export default {
             let self = this;
             //.replace(/\n/g, "<br/>")
             let value = e.target.value;
-            console.log("value:",value)
+            console.log("value:", value)
             self.$store.dispatch('sertTxt', value)
             self.$store.dispatch('isSave', true);
+            self.$emit("inputTxt")
         },
         dragging(event) {
             let self = this;
@@ -76,23 +77,18 @@ export default {
             if (self.filePath != path) {
                 if (self.isNeedSave) {
                     this.$emit("dialogAndSave")
-                } else {
-                    let reader = new FileReader();
-                    //  console.log(files,reader)
-                    reader.readAsText(files[0], 'UTF-8');
-                    reader.onload = function (e) {
-                        let value = e.target.result;
-                        document.getElementById("inputArea").value = e.target.result;
-                        self.$store.dispatch('sertTxt', e.target.result)
-                    }
-                    console.log("path:", path)
-                    self.$store.dispatch('filePath', path)
-                    self.$store.dispatch('isSave', true)
                 }
-
+                let reader = new FileReader();
+                //  console.log(files,reader)
+                reader.readAsText(files[0], 'UTF-8');
+                reader.onload = function (e) {
+                    let value = e.target.result;
+                    document.getElementById("inputArea").value = e.target.result;
+                    self.$store.dispatch('sertTxt', e.target.result)
+                }
+                console.log("path:", path)
+                self.$store.dispatch('filePath', path)
             }
-
-            this.$emit('drag')
         }
     }
 }

@@ -12,7 +12,7 @@
                 </svg>
             </li>
             </li>
-            <li class="f-l editorBtn" @click="editor('link')" title="链接">
+            <li class="f-l editorBtn" @click="editor('[链接描述](http://example.com/)')" title="链接">
                 <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-lianjie1"></use>
                 </svg>
@@ -67,10 +67,15 @@
             </li>
             </li>
     
+
+            <li class="f-r editorBtn w66" :class="{hide: !isSave}" title="保存" @click="save">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-baocun"></use>
+                </svg>
+            </li>
             <li class="f-r editorBtn w66" @click="editorModel(4)" title="编辑模式">编辑</li>
             <li class="f-r editorBtn w66" @click="editorModel(3)" title="实况模式">实况</li>
             <li class="f-r editorBtn w66" @click="editorModel(2)" title="预览模式">预览</li>
-            <li class="f-r editorBtn w66" @click="editorModel(1)" title="全屏">全屏</li>
         </ul>
     </div>
 </template>
@@ -85,6 +90,9 @@ export default {
     computed: {
         showType() {
             return this.$store.state.showType
+        },
+        isSave() {
+            return this.$store.state.isNeedSave
         }
     },
     methods: {
@@ -112,6 +120,9 @@ export default {
                         break;
                     case '```\r\n请输入代码\n```':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 4, 5);
+                        break;
+                    case '[链接描述](http://example.com/)':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 7, 1);
                         break;
                     case '![Img](图片地址)':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 7, 1);
@@ -170,6 +181,10 @@ export default {
         },
         editorModel(value) {
             this.$store.dispatch('showType', value)
+        },
+        /*保存*/ 
+        save() {
+            this.$emit("save")
         }
 
     }
@@ -211,6 +226,14 @@ export default {
         }
         .w66{
             width: 66px;
+        }
+        .hide{
+            opacity: .3;
+            &:hover {
+                background: initial;
+                color: #fff;
+                cursor: initial;
+            }
         }
     }
 }

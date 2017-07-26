@@ -1,7 +1,7 @@
 {
-  "name": "hello-word",
-  "productName": "hello-word",
-  "version": "0.0.0",
+  "name": "EMark",
+  "productName": "EMark",
+  "version": "1.0.0",
   "author": "wanyuqing <wyq_life@yeah.net>",
   "description": "An electron-vue project",
   "license": null,
@@ -18,21 +18,9 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": ""
-  },
-  "dependencies": {
-    "axios": "^0.16.1",
-    "highlight.js": "^9.12.0",
-    "marked": "^0.3.6",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.5",
-    "vue": "^2.3.3",
-    "vue-electron": "^1.0.6",
-    "vue-router": "^2.5.3",
-    "vuex": "^2.3.1"
+    "postinstall": "cd src && npm install"
   },
   "devDependencies": {
-    "animate.css": "^3.5.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-runtime": "^6.22.0",
@@ -58,6 +46,8 @@
     "json-loader": "^0.5.4",
     "multispinner": "^0.2.1",
     "style-loader": "^0.18.1",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.5",
     "url-loader": "^0.5.7",
     "vue-html-loader": "^1.2.2",
     "vue-loader": "^12.2.1",
