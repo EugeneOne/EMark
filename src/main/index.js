@@ -13,7 +13,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow() {
+function createWindow(path) {
   /**
    * Initial window options
    */
@@ -22,34 +22,54 @@ function createWindow() {
     useContentSize: true,
     width: 1000
   })
-
   mainWindow.loadURL(winURL)
-
+  mainWindow.show();
   mainWindow.on('closed', () => {
-    mainWindow = null
+    mainWindow = null;
   })
-
-  app.addRecentDocument("/Users/wanyuqing/Desktop/未命名.md")
 }
 
+// ipcMain.on('newScreen', (event, path) => {
+//   createWindow(path);
+// })
+
+// app.addRecentDocument("/Users/wanyuqing/Desktop/未命名.md")
+
 app.on('open-file', (event, path) => {
-  mainWindow.webContents.send('newFile',path)
+  if (mainWindow == null) {
+    createWindow(path)
+  }
+  setTimeout(function () {
+    mainWindow.webContents.send('newFile', path, 'new')
+  }, 1000)
+
 })
 
-app.on('ready', createWindow)
+
+app.on('ready', () => {
+  createWindow()
+})
 
 app.on('activate', () => {
-  console.log('activate')
+  if (mainWindow == null) {
+    createWindow()
+  }
 })
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on('will-quit', () => {
+  if(mainWindow) {
+    mainWindow.webContents.send('close')
+  } else {
     app.quit()
   }
 })
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
+ipcMain.on('closeAll', () => {
+  app.quit()
 })
+
+// app.on('window-all-closed', () => {
+//   if (process.platform !== 'darwin') {
+//     app.quit()
+//   }
+// })

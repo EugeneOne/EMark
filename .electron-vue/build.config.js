@@ -12,5 +12,11 @@ module.exports = {
   ignore: /(^\/(src|test|\.[a-z]+|README|yarn|static|dist\/web))|\.gitkeep/,
   out: path.join(__dirname, '../build'),
   overwrite: true,
-  platform: process.env.BUILD_TARGET || 'all'
+  platform: process.env.BUILD_TARGET || 'all',
+  extendInfo: {
+      CFBundleDocumentTypes: [
+      {
+        CFBundleTypeExtensions: ['md','zip']
+      }]
+  }
 }

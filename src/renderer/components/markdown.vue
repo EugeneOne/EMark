@@ -27,7 +27,9 @@ const browserWindow = remote.BrowserWindow
 const focusedWindow = browserWindow.getFocusedWindow()
 const path = require('path')
 
-
+const winURL = process.env.NODE_ENV === 'development'
+    ? `http://localhost:9080`
+    : `file://${__dirname}/index.html`
 
 import fs from 'fs'
 
@@ -56,21 +58,41 @@ export default {
     },
     mounted() {
         let self = this;
-
-        ipcRenderer.on('newFile',function(event, path) {
-            if(path) {
-                self.newScreen(path)
-            }
-        })
-        focusedWindow.on('close', () => {
-            if (self.isSave) {
+        ipcRenderer.on('newFile', function (event, filePath, isNew) {
+            // if (filePath && !isNew) {
+            //     self.newScreen(filePath)
+            // } else if (filePath && isNew) {
+            //     self.readFile(filePath)
+            // }
+            /*有未保存文件新文件*/
+            if (!self.filePath && self.isSave) {
                 self.saveAsFile()
+            } else if (self.isSave) {
+                self.saveFile()
             }
+            console.log("filePath:", filePath)
+            self.readFile(filePath)
         })
+        window.onbeforeunload = function (e) {
+            console.log('I do not want to be closed');
+            let flage
+            if (self.isSave) {
+                self.saveFile()
+            }
+        };
+        focusedWindow.on('move', (event) => {
+            
+        })
+        // ipcRenderer.on('close', () => {
+        //     if (self.isSave) {
+        //         self.saveFile()
+        //     }
+        //     ipcRenderer.send('closeAll');
+        // })
         this.initMenu();
         this.openLinkExternal();
 
-        if(focusedWindow.getRepresentedFilename()) {
+        if (focusedWindow.getRepresentedFilename()) {
             self.readFile(focusedWindow.getRepresentedFilename())
         }
     },
@@ -153,13 +175,13 @@ export default {
                 {
                     label: '文件',
                     submenu: [
-                        {
-                            label: '新建',
-                            accelerator: 'CmdOrCtrl+N',
-                            click: function () {
-                                self.newScreen()
-                            }
-                        },
+                        // {
+                        //     label: '新建',
+                        //     accelerator: 'CmdOrCtrl+N',
+                        //     click: function () {
+                        //         self.newScreen()
+                        //     }
+                        // },
                         {
                             label: '打开文件',
                             click: function () {
@@ -244,11 +266,7 @@ export default {
         openFile() {
             //弹框
             let self = this;
-            if (self.isSave && !self.filePath) {
-                self.saveAsFile();
-            } else if (self.isSave) {
-                self.saveFile()
-            }
+            self.saveFile()
 
             dialog.showOpenDialog(focusedWindow, {
                 title: 'Open Dialog',
@@ -266,13 +284,12 @@ export default {
         readFile(path) {
             let self = this;
             console.log("readFile:", path)
-            focusedWindow.setRepresentedFilename(path)
+            // focusedWindow.setRepresentedFilename(path)
 
             fs.readFile(path, 'utf8', function (err, content) {
                 self.$store.dispatch('filePath', path)
                 console.log("content:", content)
                 self.$store.dispatch('sertTxt', content)
-                // openDialog('error', err.toString())
             })
         },
         saveAsFile() {
@@ -280,12 +297,14 @@ export default {
             var savePath = dialog.showSaveDialog(focusedWindow, {
                 title: '是否保存',
                 filters: [
-                    { name: 'Markdown file', extensions: ['md'] },
-                    { name: 'Text file', extensions: ['txt'] }
+                    { name: 'Markdown file', extensions: ['md'] }
                 ],
-                properties: ['openFile']
+                // properties: ['openFile']
             })
-            this.writeFile(savePath)
+            /*确认保存*/
+            if (savePath) {
+                this.writeFile(savePath)
+            }
         },
         saveFile() {
             let self = this;
@@ -302,18 +321,19 @@ export default {
             self.$store.dispatch('isSave', false)
             self.$store.dispatch('filePath', path)
         },
-        newScreen(path) {
-            let self = this;
-            var webContents = focusedWindow.webContents;
-            let win = new browserWindow({ width: 1000, height: 750 });
-            win.on('close', function () { win = null })
-            win.loadURL(webContents.getURL())
-            win.show();
-            if(path) {
-                 win.setRepresentedFilename(path)
-                // self.readFile(path)
-            }
-        },
+        // newScreen(filePath) {
+        //     let self = this;
+        //     // ipcRenderer.send('newScreen',filePath);
+        //     var webContents = focusedWindow.webContents;
+        //     let win = new browserWindow({ width: 1000, height: 750 });
+        //     win.on('close', function () { win = null })
+        //     win.loadURL(winURL)
+        //     win.show();
+        //     // if (path) {
+        //     //     win.setRepresentedFilename(path)
+        //     //     // self.readFile(path)
+        //     // }
+        // },
         dialogAndSave() {
             let self = this;
             if (self.filePath) {
