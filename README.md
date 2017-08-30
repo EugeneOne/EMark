@@ -1,4 +1,4 @@
-# hello-word
+# my-project
 
 > An electron-vue project
 

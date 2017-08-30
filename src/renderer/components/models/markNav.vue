@@ -18,7 +18,7 @@
                 </svg>
             </li>
             </li>
-            <li class="f-l editorBtn" @click="editor('> 引用文字')" title="引用">
+            <li class="f-l editorBtn" @click="editor('\n> 引用文字')" title="引用">
                 <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-yinyong"></use>
                 </svg>
@@ -97,26 +97,44 @@ export default {
     },
     methods: {
         editor(value) {
+            console.log("value:",value)
             let that = this;
             let inputArea = document.getElementById("inputArea");
             inputArea.focus();
-
+            //光标开始处
             let startPoint = inputArea.selectionStart;
+            //光标结束处
             let endPoint = inputArea.selectionEnd;
+            //光标选中处内容
             let oldValue = inputArea.value;
 
             let newValue = "";
 
             if (startPoint == endPoint) {
                 switch (value) {
+                    case '*加粗内容*':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 1, 1);
+                        break;
                     case '**加粗内容**':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 2, 2);
+                        break;
+                    case '***加粗内容***':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 3, 3);
+                        break;
+                    case '****加粗内容****':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 4, 4);
+                        break;
+                    case '*****加粗内容*****':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 5, 5);
+                        break;
+                    case '******加粗内容******':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 6, 6);
                         break;
                     case '*斜体内容*':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 1, 1);
                         break;
-                    case '> 引用文字':
-                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 2, 0);
+                    case '\n> 引用文字':
+                        newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 3, 0);
                         break;
                     case '```\r\n请输入代码\n```':
                         newValue = that.insertEnd(inputArea, endPoint, oldValue, value, 4, 5);

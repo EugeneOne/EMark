@@ -1,7 +1,7 @@
 <template>
     <div id="markdown">
         <div class="markdownOut">
-            <mark-nav @save="dialogAndSave"></mark-nav>
+            <mark-nav @save="dialogAndSave" ref="markNav"></mark-nav>
             <section>
                 <input-page :width=inputWidth class="input page" @dialogAndSave="dialogAndSave"></input-page>
                 <output-page :width=outputWidth class="out page"></output-page>
@@ -81,7 +81,7 @@ export default {
             }
         };
         focusedWindow.on('move', (event) => {
-            
+
         })
         // ipcRenderer.on('close', () => {
         //     if (self.isSave) {
@@ -249,6 +249,150 @@ export default {
                     ]
                 },
                 {
+                    label: '插入',
+                    submenu: [
+                        {
+                            label: '当前时间',
+                            accelerator: 'CmdOrCtrl+D',
+                            click: function () {
+                                self.setTime()
+                            }
+                        },
+                        {
+                            type: 'separator'
+                        },
+                        {
+                            label: '标题',
+                            submenu: [
+                                {
+                                    label: '一级标题',
+                                    accelerator: 'Cmd+1',
+                                    click: function () {
+                                        self.editor('*加粗内容*')
+                                    }
+                                },
+                                {
+                                    label: '二级标题',
+                                    accelerator: 'Cmd+2',
+                                    click: function () {
+                                        self.editor('**加粗内容**')
+                                    }
+                                },
+                                {
+                                    label: '三级标题',
+                                    accelerator: 'Cmd+3',
+                                    click: function () {
+                                        self.editor('***加粗内容***')
+                                    }
+                                },
+                                {
+                                    label: '四级标题',
+                                    accelerator: 'Cmd+4',
+                                    click: function () {
+                                        self.editor('****加粗内容****')
+                                    }
+                                },
+                                {
+                                    label: '五级标题',
+                                    accelerator: 'Cmd+5',
+                                    click: function () {
+                                        self.editor('*****加粗内容*****')
+                                    }
+                                },
+                                {
+                                    label: '六级标题',
+                                    accelerator: 'Cmd+6',
+                                    click: function () {
+                                        self.editor('******加粗内容******')
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            label: '加粗',
+                            accelerator: 'Cmd+B',
+                            click: function () {
+                                self.editor('**加粗内容**')
+                            }
+                        },
+                        {
+                            label: '斜体',
+                            accelerator: 'Cmd+I',
+                            click: function () {
+                                self.editor('*斜体内容*')
+                            }
+                        },
+                        {
+                            label: '链接',
+                            accelerator: 'Cmd+L',
+                            click: function () {
+                                self.editor('[链接描述](http://example.com/)')
+                            }
+                        },
+                        {
+                            label: '引用',
+                            accelerator: 'Cmd+Ctrl+Q',
+                            click: function () {
+                                self.editor('\n> 引用文字')
+                            }
+                        },
+                        {
+                            label: '代码',
+                            accelerator: 'Cmd+K',
+                            click: function () {
+                                self.editor('```\r\n请输入代码\n```')
+                            }
+                        },
+                        {
+                            label: '图片',
+                            accelerator: 'Cmd+Ctrl+P',
+                            click: function () {
+                                self.editor('![Img](图片地址)')
+                            }
+                        },
+                        {
+                            label: '有序列表',
+                            accelerator: 'Cmd+Ctrl+O',
+                            click: function () {
+                                self.editor('\n 1. 列表项目')
+                            }
+                        },
+                        {
+                            label: '无序列表',
+                            accelerator: 'Cmd+Ctrl+L',
+                            click: function () {
+                                self.editor('\n - 列表项目')
+                            }
+                        },
+                    ]
+                },
+                {
+                    label: '窗口',
+                    submenu: [
+                        {
+                            label: '编辑',
+                            accelerator: 'Cmd+Ctrl+Right',
+                            click: function () {
+                                self.screen(4)
+                            }
+                        },
+                        {
+                            label: '预览',
+                            accelerator: 'Cmd+Ctrl+Left',
+                            click: function () {
+                                self.screen(2)
+                            }
+                        },
+                        {
+                            label: '实况',
+                            accelerator: 'Cmd+Ctrl+Down',
+                            click: function () {
+                                self.screen(3)
+                            }
+                        },
+                    ]
+                },
+                {
                     label: '我的信息',
                     submenu: [
                         {
@@ -342,6 +486,16 @@ export default {
                 self.saveAsFile();
             }
 
+        },
+        setTime() {
+
+        },
+        editor(value) {
+            this.$refs.markNav.editor(value)
+        },
+        // 窗口显示
+        screen(value) {
+            this.$refs.markNav.editorModel(value)
         }
     }
 }

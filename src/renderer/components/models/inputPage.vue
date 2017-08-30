@@ -19,7 +19,7 @@ export default {
     },
     computed: {
         txt() {
-            console.log("input:", this.$store.state.articleList)
+            //console.log("input:", this.$store.state.articleList)
             return this.$store.state.articleList.content
         },
         filePath() {
@@ -33,19 +33,6 @@ export default {
         console.log("eletron:", this.eletron)
         console.log("this.$store:", this.$store)
         let textarea = document.getElementById("inputArea");
-        // textarea.addEventListener("dragenter", dragHandle)
-        // function dragHandle(event) {
-        //     let that = this;
-        //     let dt = event.dataTransfer;
-        // 	let files = dt.files;
-
-        //      let reader = new FileReader();
-        //      console.log(files,reader)
-        //      reader.readAsText(files[0], 'UTF-8');
-        //      reader.onload = function(e) {
-
-        //      }
-        // }
     },
     methods: {
         scroll(e) {
@@ -55,19 +42,18 @@ export default {
         },
         sertTxt(e) {
             let self = this;
-            //.replace(/\n/g, "<br/>")
             let value = e.target.value;
             console.log("value:", value)
             self.$store.dispatch('sertTxt', value)
             self.$store.dispatch('isSave', true);
-            self.$emit("inputTxt")
+            //self.$emit("inputTxt")
         },
         dragging(event) {
             let self = this;
             let dt = event.dataTransfer;
             let files = dt.files;
             var path = files[0].path;
-            console.log("path:", files)
+            //console.log("path:", files)
             //如果拖拽的文件不是本文件
             if (self.filePath != path) {
                 if (self.isNeedSave) {
@@ -81,7 +67,7 @@ export default {
                     document.getElementById("inputArea").value = e.target.result;
                     self.$store.dispatch('sertTxt', e.target.result)
                 }
-                console.log("path:", path)
+                //console.log("path:", path)
                 self.$store.dispatch('filePath', path)
             }
         }
