@@ -465,19 +465,6 @@ export default {
             self.$store.dispatch('isSave', false)
             self.$store.dispatch('filePath', path)
         },
-        // newScreen(filePath) {
-        //     let self = this;
-        //     // ipcRenderer.send('newScreen',filePath);
-        //     var webContents = focusedWindow.webContents;
-        //     let win = new browserWindow({ width: 1000, height: 750 });
-        //     win.on('close', function () { win = null })
-        //     win.loadURL(winURL)
-        //     win.show();
-        //     // if (path) {
-        //     //     win.setRepresentedFilename(path)
-        //     //     // self.readFile(path)
-        //     // }
-        // },
         dialogAndSave() {
             let self = this;
             if (self.filePath) {
